@@ -1,6 +1,7 @@
 import { Box, Stack, Typography, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { get_user_profile_data } from "../api/endpoints";
+import { SERVER_URL } from "../constants/constants";
 
 export default function UserProfile() {
   const get_username_from_url = () => {
@@ -42,6 +43,7 @@ function UserDetails({ username }) {
         setProfileImage(data.profile_image);
         setFollowerCount(data.follower_count);
         setFollowingCount(data.following_count);
+        console.log(SERVER_URL, data.profile_image);
       } catch (err) {
         console.log("error", err);
       } finally {
@@ -75,7 +77,7 @@ function UserDetails({ username }) {
           }}
         >
           <img
-            src={`http://127.0.0.1:8000/api${profileImage}`}
+            src={loading ? "" : `${SERVER_URL}${profileImage}`}
             alt="profile"
             style={{
               width: "100%",
@@ -94,12 +96,16 @@ function UserDetails({ username }) {
           <Stack direction="row" spacing={4}>
             <Stack spacing={0.3}>
               <Typography variant="body2">Followers</Typography>
-              <Typography variant="subtitle1">{followerCount}</Typography>
+              <Typography variant="subtitle1">
+                {loading ? "-" : followerCount}
+              </Typography>
             </Stack>
 
             <Stack spacing={0.3}>
               <Typography variant="body2">Following</Typography>
-              <Typography variant="subtitle1">{followingCount}</Typography>
+              <Typography variant="subtitle1">
+                {loading ? "-" : followingCount}
+              </Typography>
             </Stack>
           </Stack>
 
@@ -111,7 +117,7 @@ function UserDetails({ username }) {
       </Stack>
 
       <Typography mt={1} fontSize={18}>
-        {bio}
+        {loading ? "-" : bio}
       </Typography>
     </Stack>
   );
